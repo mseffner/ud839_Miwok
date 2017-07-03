@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,8 +20,11 @@ import java.util.List;
 
 public class WordAdapter extends ArrayAdapter<Word> {
 
-    public WordAdapter(@NonNull Context context, @NonNull List<Word> objects) {
+    private int mColorResourceId;
+
+    public WordAdapter(@NonNull Context context, @NonNull List<Word> objects, int colorResourceId) {
         super(context, 0, objects);
+        this.mColorResourceId = colorResourceId;
     }
 
     @NonNull
@@ -34,10 +39,20 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
         Word currentWord = getItem(position);
 
+        LinearLayout wordListLayout = (LinearLayout) listItemView.findViewById(R.id.word_list_layout);
+        wordListLayout.setBackgroundResource(mColorResourceId);
+
         TextView miwokTextView = (TextView) listItemView.findViewById(R.id.miwok_text_view);
         TextView defaultTextView = (TextView) listItemView.findViewById(R.id.default_text_view);
+        ImageView imageView = (ImageView) listItemView.findViewById(R.id.image);
+
         miwokTextView.setText(currentWord.getMiwokTranslation());
         defaultTextView.setText(currentWord.getDefaultTranslation());
+
+        if (currentWord.getImageResourceId() == -1)
+            imageView.setVisibility(View.GONE);
+        else
+            imageView.setImageResource(currentWord.getImageResourceId());
 
         return listItemView;
 
