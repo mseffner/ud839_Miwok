@@ -5,7 +5,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,6 +36,7 @@ public abstract class BaseListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeData();
 
@@ -73,6 +76,16 @@ public abstract class BaseListActivity extends AppCompatActivity {
      * for the protected variables (imageIds is optional).
      */
     protected abstract void initializeData();
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            releaseMediaPlayer();
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onStop() {
