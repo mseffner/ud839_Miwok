@@ -9,17 +9,20 @@ public class Word {
     private String mDefaultTranslation;
     private String mMiwokTranslation;
     private int mImageResourceId;
+    private int mAudioResource;
 
-    public Word(String defaultTranslation, String miwokTranslation) {
+    public Word(String defaultTranslation, String miwokTranslation, int audioResource) {
         this.mDefaultTranslation = defaultTranslation;
         this.mMiwokTranslation = miwokTranslation;
         this.mImageResourceId = -1;
+        this.mAudioResource = audioResource;
     }
 
-    public Word(String defaultTranslation, String miwokTranslation, int imageResource) {
+    public Word(String defaultTranslation, String miwokTranslation, int imageResource, int audioResource) {
         this.mDefaultTranslation = defaultTranslation;
         this.mMiwokTranslation = miwokTranslation;
         this.mImageResourceId = imageResource;
+        this.mAudioResource = audioResource;
     }
 
     public String getDefaultTranslation() {
@@ -32,5 +35,9 @@ public class Word {
 
     public int getImageResourceId() {
         return this.mImageResourceId;
+    }
+
+    public int getAudioResource() {
+        return this.mAudioResource;
     }
 }

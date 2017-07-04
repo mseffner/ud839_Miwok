@@ -1,6 +1,7 @@
 package com.example.android.miwok;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import java.util.List;
 public class WordAdapter extends ArrayAdapter<Word> {
 
     private int mColorResourceId;
+    private MediaPlayer mediaPlayer;
 
     public WordAdapter(@NonNull Context context, @NonNull List<Word> objects, int colorResourceId) {
         super(context, 0, objects);
@@ -37,7 +39,10 @@ public class WordAdapter extends ArrayAdapter<Word> {
             );
         }
 
-        Word currentWord = getItem(position);
+
+        final Word currentWord = getItem(position);
+
+        listItemView.setTag(currentWord.getAudioResource());
 
         LinearLayout wordListLayout = (LinearLayout) listItemView.findViewById(R.id.word_list_layout);
         wordListLayout.setBackgroundResource(mColorResourceId);

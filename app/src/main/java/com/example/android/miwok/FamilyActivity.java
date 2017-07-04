@@ -1,13 +1,18 @@
 package com.example.android.miwok;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FamilyActivity extends AppCompatActivity {
+
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +34,17 @@ public class FamilyActivity extends AppCompatActivity {
                 R.drawable.family_younger_sister,R.drawable.family_grandmother,
                 R.drawable.family_grandfather
         };
+        int[] audioIdArray = {
+                R.raw.family_father,R.raw.family_mother,R.raw.family_son,
+                R.raw.family_daughter,R.raw.family_older_brother,
+                R.raw.family_younger_brother,R.raw.family_older_sister,
+                R.raw.family_younger_sister,R.raw.family_grandmother,
+                R.raw.family_grandfather
+        };
 
-        List<Word> words = new ArrayList<>();
+        final List<Word> words = new ArrayList<>();
         for (int i = 0; i < englishWordsArray.length; i++) {
-            words.add(new Word(englishWordsArray[i], miwokWordsArray[i], imageIdArray[i]));
+            words.add(new Word(englishWordsArray[i], miwokWordsArray[i], imageIdArray[i], audioIdArray[i]));
         }
 
         WordAdapter itemsAdapter = new WordAdapter(this, words, R.color.category_family);
@@ -40,5 +52,14 @@ public class FamilyActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list);
 
         listView.setAdapter(itemsAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int audioId = words.get(position).getAudioResource();
+                mediaPlayer = MediaPlayer.create(FamilyActivity.this, audioId);
+                mediaPlayer.start();
+            }
+        });
+
     }
 }
