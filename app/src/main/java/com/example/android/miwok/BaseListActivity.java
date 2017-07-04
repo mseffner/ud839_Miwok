@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,12 +43,7 @@ public abstract class BaseListActivity extends AppCompatActivity {
         audioFocusChangeListener = getAudioFocusChangeListener();
 
         // Create the OnCompletionListener to release media resources after playback completes
-        onCompletionListener = new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                releaseMediaPlayer();
-            }
-        };
+        onCompletionListener = getOnCompletionListener();
 
         // Build the Word list
         buildWordList();
@@ -60,6 +56,16 @@ public abstract class BaseListActivity extends AppCompatActivity {
 
         // Give the ListView an OnItemClickListener to play audio when a list item is clicked
         listView.setOnItemClickListener(getOnItemClickListener());
+    }
+
+    @NonNull
+    private MediaPlayer.OnCompletionListener getOnCompletionListener() {
+        return new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                releaseMediaPlayer();
+            }
+        };
     }
 
     /**
