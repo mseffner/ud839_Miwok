@@ -5,10 +5,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -19,9 +20,9 @@ import java.util.List;
  * Created by MatthewG on 2017/07/04.
  */
 
-public abstract class BaseListActivity extends AppCompatActivity {
-    
-    private final List<Word> words = new ArrayList<>();
+public abstract class BaseListFragment extends Fragment {
+
+    private List<Word> words;
     private MediaPlayer mediaPlayer;
     private AudioManager audioManager;
     private MediaPlayer.OnCompletionListener onCompletionListener;
@@ -31,17 +32,17 @@ public abstract class BaseListActivity extends AppCompatActivity {
     protected int[] imageIds;
     protected int[] audioIds;
     protected int backgroundColor;
-    
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
 
         initializeData();
 
         // Get the AudioManager for managing audio focus
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         // Create the AudioFocusChangeListener to respond to changes in focus
         audioFocusChangeListener = getAudioFocusChangeListener();
 
@@ -53,12 +54,14 @@ public abstract class BaseListActivity extends AppCompatActivity {
 
         // Create the WordAdapter from the Word list and appropriate background color
         // Get the ListView and attach the new WordAdapter
-        WordAdapter itemsAdapter = new WordAdapter(this, words, backgroundColor);
-        ListView listView = (ListView) findViewById(R.id.list);
+        WordAdapter itemsAdapter = new WordAdapter(getActivity(), words, backgroundColor);
+        ListView listView = (ListView) rootView.findViewById(R.id.list);
         listView.setAdapter(itemsAdapter);
 
         // Give the ListView an OnItemClickListener to play audio when a list item is clicked
         listView.setOnItemClickListener(getOnItemClickListener());
+
+        return rootView;
     }
 
     @NonNull
@@ -78,17 +81,7 @@ public abstract class BaseListActivity extends AppCompatActivity {
     protected abstract void initializeData();
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            releaseMediaPlayer();
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         releaseMediaPlayer();
     }
@@ -103,6 +96,7 @@ public abstract class BaseListActivity extends AppCompatActivity {
     }
 
     private void buildWordList() {
+        words = new ArrayList<>();
         for (int i = 0; i < englishWords.length; i++) {
             if (imageIds != null) {
                 words.add(new Word(englishWords[i], miwokWords[i], imageIds[i], audioIds[i]));
@@ -124,7 +118,7 @@ public abstract class BaseListActivity extends AppCompatActivity {
                         AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 // If we get focus, play the audio
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mediaPlayer = MediaPlayer.create(getBaseContext(), audioId);
+                    mediaPlayer = MediaPlayer.create(getActivity(), audioId);
                     mediaPlayer.start();
                     mediaPlayer.setOnCompletionListener(onCompletionListener);
                 }

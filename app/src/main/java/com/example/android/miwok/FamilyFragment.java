@@ -1,7 +1,10 @@
 package com.example.android.miwok;
 
+/**
+ * Created by MatthewG on 2017/07/04.
+ */
 
-public class FamilyActivity extends BaseListActivity {
+public class FamilyFragment extends BaseListFragment {
 
     @Override
     protected void initializeData() {

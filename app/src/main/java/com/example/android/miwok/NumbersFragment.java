@@ -1,7 +1,11 @@
 package com.example.android.miwok;
 
 
-public class NumbersActivity extends BaseListActivity {
+/**
+ * Created by MatthewG on 2017/07/04.
+ */
+
+public class NumbersFragment extends BaseListFragment {
 
     @Override
     protected void initializeData() {
